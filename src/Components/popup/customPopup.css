@@ -1,0 +1,54 @@
+.modal {
+    height: 100%;
+    width: 100%;
+    background-color:rgba(0,0,0,0.4);
+    position: fixed;
+    top:0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: 0.5s;
+    z-index: 100;
+    pointer-events: none;
+    text-align: center;
+}
+.modal input {
+    min-width: 200px;
+    font-size:x-large;
+}
+
+.modal form{
+    display: grid;
+    place-items: center;
+}
+.modal button {
+    margin-top: 10px;
+}
+
+.modal__close-button{
+    position: fixed;
+    top: 0;
+    right: 0;
+}
+
+.modal__content {
+width: 50%;
+
+    padding: 20px;
+    border-radius: 12px;
+    background-color: #fff;
+    transform: scale(0.5);
+    transition: 0.4s all;
+}
+
+.modal.active {
+    pointer-events: all;
+    opacity: 1;
+
+}
+
+.modal__content.active{
+    transform: scale(1);
+}
