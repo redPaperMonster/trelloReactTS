@@ -1,0 +1,28 @@
+.column_card{
+    width: auto;
+    height: 50px;
+    border: 2px solid black ;
+    margin: 10px;
+    text-align: center;
+    cursor: pointer;
+    background-color: #fff;
+}
+
+.cards__close-button{
+    top: 0;
+    right: 0;
+    position: fixed;
+}
+
+.card__delete-button{
+width: 20px;
+height: 20px;
+top: 0;
+right: 0;
+position: relative;
+}
+
+.card__wrapper {
+    display: flex;
+  justify-content: space-between;
+}

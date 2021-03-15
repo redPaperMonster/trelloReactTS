@@ -1,0 +1,12 @@
+.column {
+    margin: 20px;
+    background-color:darkgray;
+    height: 100vw;
+    max-height: 600px;
+    border: 1px solid black ;
+
+}
+
+.column__add-button{
+    margin-left: 80%;
+}

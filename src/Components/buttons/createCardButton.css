@@ -1,0 +1,16 @@
+.createCard__button {
+background-color: #fff;
+}
+
+.createCard__input{
+min-width: 300px;
+}
+
+.createCard__textarea{
+    min-width: 300px;
+    margin-top: 20px;
+}
+
+.createCard__form{
+    display: inline-block;
+}
