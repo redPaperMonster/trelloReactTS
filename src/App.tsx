@@ -1,26 +1,186 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useState, useEffect } from 'react'
+import { Column, Header } from './Components/';
+import { ModalRegistration, ModalCreateColumn } from './Modals';
+import { Board } from "./AppStyles";
+
+export type ColumnType = {
+  id: string,
+  title: string,
+  description: string
+}
+
+export type CardType = {
+  id: string,
+  columnId: string,
+  title: string,
+  description: string
+}
+
+export type CommentsType = {
+  id: string,
+  cardId: string,
+  text: string,
+  author: string
+}
+
+export type DataStoreType = {
+  columns: Array<ColumnType>
+  cards: Array<CardType>
+  comments: Array<CommentsType>
+}
 
 function App() {
+  const initialStore: DataStoreType = {
+    columns: [
+      { id: `${new Date().getTime()}-TODO`, title: "TODO", description: "TODO column" },
+      { id: `${new Date().getTime()}-In Progress`, title: "In Progress", description: "in progress column" },
+      { id: `${new Date().getTime()}-Testing`, title: "Testing", description: "testing column" },
+      { id: `${new Date().getTime()}-Done`, title: "Done", description: "done column" }],
+
+    cards: [],
+
+    comments: []
+  }
+
+  const [dataStore, setDataStore] = useState<DataStoreType>(initialStore);
+  const [showCreateColumnModal, setCreateColumnModal] = useState<boolean>(false)
+  const [userName, setUserName] = useState<string>('')
+  const [loading, setLoading] = useState<boolean>(true)
+
+  useEffect(() => {
+    checkUserName();
+  }, [])
+
+  const checkUserName = async () => {
+    const storagedName = await localStorage.getItem("userName")
+    storagedName && setUserName(storagedName)
+    setLoading(false)
+  }
+
+  const deleteUserName = () => {
+    localStorage.setItem('userName', '');
+    setUserName("");
+  }
+
+  const handleAddColumn = (newColumn: ColumnType) => {
+    setDataStore({ ...dataStore, columns: [...dataStore.columns, newColumn] })
+  }
+
+  const handleDeleteColumn = (id: string) => {
+    const newColumns = dataStore.columns.filter(
+      (item: ColumnType) => item.id !== id);
+    const newCards = dataStore.cards.filter(
+      (item: CardType) => item.columnId !== id);
+    const newCardsIds = newCards.map(
+      (i: CardType) => { return i.id })
+    const newComments = dataStore.comments.filter(
+      (i: CommentsType) => {
+        return newCardsIds.includes(i.cardId)
+      })
+    setDataStore({ ...dataStore, columns: newColumns, cards: newCards, comments: newComments })
+  }
+
+  const handleUpdateColumn = (id: string, newTitle: string, newDescription: string) => {
+    let newColumns = dataStore.columns.map((item: ColumnType) => {
+      if (id === item.id) {
+        return item = { id: item.id, title: newTitle, description: newDescription }
+      }
+      return item
+    })
+    setDataStore({ ...dataStore, columns: newColumns })
+  }
+
+  const handleAddCard = (newCard: CardType) => {
+    setDataStore({ ...dataStore, cards: [...dataStore.cards, newCard] })
+  }
+
+  const handleDeleteCard = (id: string) => {
+    let newCards = dataStore.cards.filter(
+      (item: CardType) => item.id !== id)
+    let newComments = dataStore.comments.filter(
+      (item: CommentsType) => item.cardId !== id)
+    setDataStore({ ...dataStore, cards: newCards, comments: newComments })
+  }
+
+  const handleUpdateCard = (newCard: CardType) => {
+    let updatedCards = dataStore.cards.map((item: CardType) => {
+      if (newCard.id === item.id) {
+        return item = newCard
+      }
+      return item
+    })
+    setDataStore({ ...dataStore, cards: updatedCards })
+  }
+
+  const handleUsernameEnterSubmit = (newUserName: string) => {
+    if (!!newUserName) {
+      localStorage.setItem('userName', newUserName);
+      setUserName(newUserName);
+    }
+  }
+
+  const handleAddComment = (newComment: CommentsType) => {
+    if (!!newComment.text) {
+      newComment.author = JSON.parse(JSON.stringify(localStorage.getItem('userName')));
+      setDataStore({ ...dataStore, comments: [...dataStore.comments, newComment] })
+    }
+  }
+
+  const handleDeleteComment = (id: string) => {
+    let newComments = dataStore.comments.filter((i) => i.id !== id)
+    setDataStore({ ...dataStore, comments: newComments })
+  }
+
+  const handleUpdateComment = (updatedComment: CommentsType) => {
+    let updatedComments = dataStore.comments.map((item: CommentsType) => {
+      if (updatedComment.id === item.id) {
+        return item = updatedComment
+      }
+      return item
+    })
+    setDataStore({ ...dataStore, comments: updatedComments })
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    !loading ?
+      <div>
+        <Header deleteName={deleteUserName} userName={userName} onClick={() => setCreateColumnModal(true)}
+          text="+ create column"></Header>
+        <Board>
+          <ModalRegistration
+            isOpen={!userName}
+            close={() => { }}
+            handleNameEnterSubmit={handleUsernameEnterSubmit} />
+
+          {dataStore.columns.map((item: ColumnType) => {
+            const columnCards =
+              dataStore.cards.filter((i: CardType) => i.columnId === item.id);
+            return (
+              <Column
+                handleUpdate={handleUpdateColumn}
+                key={item.id}
+                column={item}
+                userName={JSON.parse(JSON.stringify(localStorage.getItem('userName')))}
+                cards={columnCards} comments={dataStore.comments}
+                handleDeleteColumn={handleDeleteColumn}
+                handleDeleteCard={handleDeleteCard}
+                handleAddCard={handleAddCard}
+                handleUpdateCard={handleUpdateCard}
+                handleAddComment={handleAddComment}
+                handleDeleteComment={handleDeleteComment}
+                handleUpdateComment={handleUpdateComment} />)
+          })}
+
+          <ModalCreateColumn
+            isOpen={showCreateColumnModal}
+            close={() => setCreateColumnModal(false)}
+            handleAddColumn={handleAddColumn} />
+        </Board>
+      </div>
+      : <h1>LOADING...</h1>
+
+  )
 }
 
 export default App;
