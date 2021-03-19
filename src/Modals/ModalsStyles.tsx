@@ -57,11 +57,3 @@ justify-content: center`
 export const CommentTextarea = styled.textarea`
 word-break: break-all;`
 
-export const ModalInputTooltipWrapper = styled.div`
-display: flex;
-flex-flow: row wrap;
-justify-content: center;
-align-items: center`
-
-export const SomeWrapper = styled.div`
-flex-shrink: 1;`

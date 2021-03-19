@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react'
-import { Button, Modal, Input, Tooltip } from '../Components';
-import { ModalInputTooltipWrapper, ModalTitle, SomeWrapper } from './ModalsStyles';
+import { Button, Modal, FormInput } from '../Components';
+import { Form, Field } from 'react-final-form'
 
 interface Props {
     isOpen: boolean,
@@ -14,36 +14,35 @@ const ModalRegistration: React.FC<Props> = ({
     close,
     handleNameEnterSubmit }) => {
 
-    let userName = "";
+    const handleSubmit = (values: any) => {
+        handleNameEnterSubmit(values.userName)
+    }
+    const required = (value: string) => (value ? undefined : 'Required')
 
-    const [showTooltip, setShowTooltip] = useState<boolean>(false)
-    const handleChange = (text: string) => {
-        userName = text;
-    }
-    const handleSubmit = () => {
-        !!userName ? handleNameEnterSubmit(userName) : setShowTooltip(true);
-    }
 
     return (
         <Modal
             isOpen={isOpen}
-            close={close} hideCloseButton>
-            <ModalTitle>Enter your name</ModalTitle>
-            <ModalInputTooltipWrapper>
-                <SomeWrapper>
-                    <Input
-                        focused
-                        onChange={e => handleChange(e.currentTarget.value)} />
-                </SomeWrapper>
-                <SomeWrapper>
-                    <Tooltip showTooltip={showTooltip}></Tooltip></SomeWrapper>
-            </ModalInputTooltipWrapper>
-            <Button
-                style="padding: 5px 20px"
-                onClick={handleSubmit}
-                text="ok" />
-
-        </Modal>
+            close={close}
+            hideCloseButton>
+            <Form
+                onSubmit={handleSubmit}>
+                {props => (
+                    <form>
+                        <div>
+                            <label>Enter your name</label>
+                            <Field
+                                name="userName"
+                                validate={required}
+                                component={FormInput} />
+                            <Button
+                                onClick={props.handleSubmit}
+                                text="Submit" />
+                        </div>
+                    </form>
+                )}
+            </Form>
+        </Modal >
     )
 }
 

@@ -3,7 +3,8 @@ import styled from 'styled-components';
 interface Props {
   onClick: () => void,
   text: string,
-  style?: string
+  style?: string,
+  submit?: boolean
 }
 
 type ButtonProps = {
@@ -24,13 +25,14 @@ outline:none;
 const Button: React.FC<Props> = ({
   onClick,
   text,
-  style }) => {
+  style,
+  submit }) => {
 
   return (
     <CommonButton
       customStyle={style || ""}
       onClick={onClick}
-      type="button">{text}</CommonButton>
+      type={submit ? "submit" : "button"}>{text}</CommonButton>
   )
 }
 

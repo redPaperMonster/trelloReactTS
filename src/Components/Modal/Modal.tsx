@@ -14,7 +14,7 @@ const Modal: React.FC<Props> = ({
     hideCloseButton,
     close }) => {
 
-    const handleKeyPress = (e: any) => {
+    const handleKeyPress = (e: React.KeyboardEvent) => {
         if (!hideCloseButton && e.key === 'Escape') {
             close();
         }

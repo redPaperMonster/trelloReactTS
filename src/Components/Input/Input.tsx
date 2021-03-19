@@ -1,14 +1,14 @@
-import styled from "styled-components";
+
+import React, { ChangeEvent } from "react";
+import { CommonInput } from "./InputStyles";
 
 interface Props {
-    onChange: (e: any) => void,
+    onChange?: (e: ChangeEvent<HTMLInputElement>) => void,
     value?: string,
     customSize?: number,
     focused?: boolean
 }
-const CommonInput = styled.input`
-margin: 1em;
-font-size: 1em;`
+
 
 
 const Input: React.FC<Props> = ({
@@ -20,14 +20,17 @@ const Input: React.FC<Props> = ({
     const size: number = customSize || 20
 
     return (
+        <div>
+            <CommonInput
+                onChange={onChange}
+                value={value}
+                type="text"
+                size={size}
+                autoFocus={focused} />
 
-        <CommonInput
-            onChange={onChange}
-            value={value}
-            type="text"
-            size={size}
-            autoFocus={focused} />
+        </div>
     )
 }
+
 
 export default Input;
