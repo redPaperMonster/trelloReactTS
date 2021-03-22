@@ -4,45 +4,45 @@ import { ModalTitle } from './ModalsStyles';
 import { Modal, Button, Input } from '../Components';
 import { CreateCardItemWrapper, CreateCardWrapper } from './ModalsStyles';
 
-interface Props {
+interface ModalProps {
   isOpen: boolean,
   close: () => void,
   handleSubmitCreate: (title: string, description: string) => void
 }
 
-const ModalCreateCard: React.FC<Props> = ({
+const ModalCreateCard: React.FC<ModalProps> = ({
   isOpen,
-  close, 
+  close,
   handleSubmitCreate }) => {
 
 
-  let localCardTitle: string, localCardDescription: string;
+  let title: string, description: string;
 
   const createAction = () => {
-    handleSubmitCreate(localCardTitle, localCardDescription)
+    handleSubmitCreate(title, description)
   }
   return (
     <Modal
       isOpen={isOpen}
       close={close}>
-        <CreateCardWrapper>
-          <ModalTitle>Enter card title</ModalTitle>
-          <CreateCardItemWrapper>
-            <Input focused
-              onChange={e => { localCardTitle = e.currentTarget.value }} />
-          </CreateCardItemWrapper>
-          <ModalTitle>Enter card description</ModalTitle>
-          <CreateCardItemWrapper>
-            <Input
-              onChange={e => { localCardDescription = e.currentTarget.value }} />
-          </CreateCardItemWrapper>
-          <CreateCardItemWrapper>
-            <Button
-              style="padding: 5px 20px"
-              onClick={createAction}
-              text="ok" />
-          </CreateCardItemWrapper>
-        </CreateCardWrapper>
+      <CreateCardWrapper>
+        <ModalTitle>Enter card title</ModalTitle>
+        <CreateCardItemWrapper>
+          <Input focused
+            onChange={e => { title = e.currentTarget.value }} />
+        </CreateCardItemWrapper>
+        <ModalTitle>Enter card description</ModalTitle>
+        <CreateCardItemWrapper>
+          <Input
+            onChange={e => { description = e.currentTarget.value }} />
+        </CreateCardItemWrapper>
+        <CreateCardItemWrapper>
+          <Button
+            style="padding: 5px 20px"
+            onClick={createAction}
+            text="ok" />
+        </CreateCardItemWrapper>
+      </CreateCardWrapper>
     </Modal>
   )
 }

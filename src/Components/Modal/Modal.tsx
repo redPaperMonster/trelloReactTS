@@ -2,20 +2,20 @@ import React from 'react'
 import { Button } from '..';
 import { CloseButton, ModalContent, ModalWindow } from './ModalStyles';
 
-interface Props {
+interface ModalProps {
     isOpen: boolean,
     hideCloseButton?: boolean,
-    close: () => void
+    close?: () => void
 }
 
-const Modal: React.FC<Props> = ({
+const Modal: React.FC<ModalProps> = ({
     isOpen,
     children,
     hideCloseButton,
     close }) => {
 
     const handleKeyPress = (e: React.KeyboardEvent) => {
-        if (!hideCloseButton && e.key === 'Escape') {
+        if (!hideCloseButton && e.key === 'Escape' && close !== undefined) {
             close();
         }
     }
@@ -28,7 +28,7 @@ const Modal: React.FC<Props> = ({
                 {children}
                 {!hideCloseButton && <CloseButton>
                     <Button
-                        onClick={close}
+                        onClick={close !== undefined ? close : () => { }}
                         text="❌" /></CloseButton>}
             </ModalContent>
         </ModalWindow>

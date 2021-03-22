@@ -81,10 +81,10 @@ function App() {
     setDataStore({ ...dataStore, columns: newColumns, cards: newCards, comments: newComments })
   }
 
-  const handleUpdateColumn = (id: string, newTitle: string, newDescription: string) => {
+  const handleUpdateColumn = (column: ColumnType) => {
     let newColumns = dataStore.columns.map((item: ColumnType) => {
-      if (id === item.id) {
-        return item = { id: item.id, title: newTitle, description: newDescription }
+      if (column.id === item.id) {
+        return column
       }
       return item
     })
@@ -106,23 +106,23 @@ function App() {
   const handleUpdateCard = (newCard: CardType) => {
     let updatedCards = dataStore.cards.map((item: CardType) => {
       if (newCard.id === item.id) {
-        return item = newCard
+        return newCard
       }
       return item
     })
     setDataStore({ ...dataStore, cards: updatedCards })
   }
 
-  const handleUsernameEnterSubmit = (newUserName: string) => {
+  const handleSaveUsername = (newUserName: string) => {
     if (!!newUserName) {
       localStorage.setItem('userName', newUserName);
       setUserName(newUserName);
     }
   }
 
-  const handleAddComment = (newComment: CommentsType) => {
-    if (!!newComment.text) {
-      newComment.author = JSON.parse(JSON.stringify(localStorage.getItem('userName')));
+  const handleAddComment = (CardId: string, text: string) => {
+    if (!!text) {
+      const newComment = { id: `${new Date().getTime()}`, cardId: CardId, text: text, author: userName }
       setDataStore({ ...dataStore, comments: [...dataStore.comments, newComment] })
     }
   }
@@ -142,43 +142,44 @@ function App() {
     setDataStore({ ...dataStore, comments: updatedComments })
   }
 
+  if (loading) return <h1>LOADING...</h1>;
   return (
-    !loading ?
-      <div>
-        <Header deleteName={deleteUserName} userName={userName} onClick={() => setCreateColumnModal(true)}
-          text="+ create column"></Header>
-        <Board>
-          <ModalRegistration
-            isOpen={!userName}
-            close={() => { }}
-            handleNameEnterSubmit={handleUsernameEnterSubmit} />
+    <div>
+      <Header
+        deleteName={deleteUserName}
+        userName={userName}
+        onClick={() => setCreateColumnModal(true)}
+        text="+ create column" />
+      <Board>
+        <ModalRegistration
+          isOpen={!userName}
+          handleNameEnterSubmit={handleSaveUsername} />
 
-          {dataStore.columns.map((item: ColumnType) => {
-            const columnCards =
-              dataStore.cards.filter((i: CardType) => i.columnId === item.id);
-            return (
-              <Column
-                handleUpdate={handleUpdateColumn}
-                key={item.id}
-                column={item}
-                userName={JSON.parse(JSON.stringify(localStorage.getItem('userName')))}
-                cards={columnCards} comments={dataStore.comments}
-                handleDeleteColumn={handleDeleteColumn}
-                handleDeleteCard={handleDeleteCard}
-                handleAddCard={handleAddCard}
-                handleUpdateCard={handleUpdateCard}
-                handleAddComment={handleAddComment}
-                handleDeleteComment={handleDeleteComment}
-                handleUpdateComment={handleUpdateComment} />)
-          })}
+        {dataStore.columns.map((item: ColumnType) => {
+          const columnCards =
+            dataStore.cards.filter((i: CardType) => i.columnId === item.id);
+          return (
+            <Column
+              handleUpdate={handleUpdateColumn}
+              key={item.id}
+              column={item}
+              userName={userName}
+              cards={columnCards} comments={dataStore.comments}
+              handleDeleteColumn={handleDeleteColumn}
+              handleDeleteCard={handleDeleteCard}
+              handleAddCard={handleAddCard}
+              handleUpdateCard={handleUpdateCard}
+              handleAddComment={handleAddComment}
+              handleDeleteComment={handleDeleteComment}
+              handleUpdateComment={handleUpdateComment} />)
+        })}
 
-          <ModalCreateColumn
-            isOpen={showCreateColumnModal}
-            close={() => setCreateColumnModal(false)}
-            handleAddColumn={handleAddColumn} />
-        </Board>
-      </div>
-      : <h1>LOADING...</h1>
+        <ModalCreateColumn
+          isOpen={showCreateColumnModal}
+          close={() => setCreateColumnModal(false)}
+          handleAddColumn={handleAddColumn} />
+      </Board>
+    </div>
 
   )
 }

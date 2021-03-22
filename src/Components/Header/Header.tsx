@@ -2,14 +2,14 @@ import React from 'react';
 import { Button } from '..';
 import { HeaderTitle, HeaderWrapper } from './HeaderStyles';
 
-interface Props {
+interface HeaderProps {
     userName: string,
     onClick: () => void,
     text: string,
     deleteName: () => void
 }
 
-const Header: React.FC<Props> = ({
+const Header: React.FC<HeaderProps> = ({
     userName,
     onClick,
     text,
@@ -21,12 +21,12 @@ const Header: React.FC<Props> = ({
             <HeaderTitle>Welcome, {userName}</HeaderTitle>
             <div>
                 <Button
-                    style="margin-right: 15px;"
+                    customStyles="margin-right: 15px;"
                     onClick={onClick}
-                    text={text}></Button>
+                    text={text} />
                 <Button
                     text="delete user name"
-                    onClick={deleteName}></Button>
+                    onClick={deleteName} />
             </div>
         </HeaderWrapper>
     )

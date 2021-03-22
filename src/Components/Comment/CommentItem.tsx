@@ -4,27 +4,27 @@ import { CommentsType } from '../../App';
 import { CommentItemWrapper, CommentAuthor, CommentText, CommentInfoWrapper, ButtonWrapper } from './CommentsStyles';
 import { Button, Input } from ".."
 
-interface Props {
+interface CommentProps {
     comment: CommentsType,
     handleDeleteComment: (id: string) => void,
     handleUpdateComment: (updatedComment: CommentsType) => void
 }
 
-const CommentItem: React.FC<Props> = ({
+const CommentItem: React.FC<CommentProps> = ({
     comment,
     handleDeleteComment,
     handleUpdateComment }) => {
 
-    const [showCommentRedact, setCommentRedact] = useState<boolean>(false)
-    const [newCommentText, setNewCommentText] = useState<string>(comment.text)
+    const [isEditable, setEditable] = useState<boolean>(false)
+    const [commentText, setcommentText] = useState<string>(comment.text)
 
     const saveChanges = () => {
-        handleUpdateComment({ id: comment.id, cardId: comment.cardId, text: newCommentText, author: comment.author })
-        setCommentRedact(false)
+        handleUpdateComment({ id: comment.id, cardId: comment.cardId, text: commentText, author: comment.author })
+        setEditable(false)
     }
 
     const handleOnClick = () => {
-        showCommentRedact ? saveChanges() : setCommentRedact(true)
+        isEditable ? saveChanges() : setEditable(true)
     }
 
     const commentInfo = <CommentInfoWrapper>
@@ -34,18 +34,18 @@ const CommentItem: React.FC<Props> = ({
     const commentRedact = <CommentInfoWrapper>
         <CommentAuthor>{comment.author}:</CommentAuthor>
         <Input
-            value={newCommentText}
-            onChange={e => setNewCommentText(e.currentTarget.value)} />
+            value={commentText}
+            onChange={e => setcommentText(e.currentTarget.value)} />
     </CommentInfoWrapper>
 
     return (
         <CommentItemWrapper>
-            {showCommentRedact ? commentRedact : commentInfo}
+            {isEditable ? commentRedact : commentInfo}
             <ButtonWrapper>
                 <Button
-                    style="margin-right: 5px;"
+                    customStyles="margin-right: 5px;"
                     onClick={handleOnClick}
-                    text={showCommentRedact ? '💾' : '✎'} />
+                    text={isEditable ? '💾' : '✎'} />
                 <Button
                     onClick={() => handleDeleteComment(comment.id)}
                     text="🗑" />

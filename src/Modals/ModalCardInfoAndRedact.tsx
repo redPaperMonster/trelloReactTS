@@ -4,7 +4,7 @@ import { CardType, CommentsType } from '../App';
 import { Modal, Button, Input, CommentItem } from '../Components';
 import { CardDescr, CardInfoWrapper, CardInputWrapper, CardModalDescr, CardRedactWrapper, CardTitle, CommentsWrapper, CommentTextarea, SendCommentWrapper } from './ModalsStyles';
 
-interface Props {
+interface ModalProps {
   isOpen: boolean,
   columnTitle: string,
   close: () => void,
@@ -12,11 +12,11 @@ interface Props {
   comments: Array<CommentsType>,
   userName: string,
   handleUpdateCard: (updatedCard: CardType) => void,
-  handleAddComment: (newComment: CommentsType) => void,
+  handleAddComment: (cardId: string, text: string) => void,
   handleDeleteComment: (id: string) => void,
   handleUpdateComment: (updatedComment: CommentsType) => void
 }
-const ModalCardInfo: React.FC<Props> = ({
+const ModalCardInfo: React.FC<ModalProps> = ({
   isOpen,
   close,
   card,
@@ -29,20 +29,19 @@ const ModalCardInfo: React.FC<Props> = ({
   userName }) => {
 
   const [isRedacted, setIsRedacted] = useState<boolean>(false)
-  const [updatedTitle, setUpdatedTitle] = useState<string>(card.title);
-  const [updatedDescription, setUpdatedDescription] = useState<string>(card.description);
-  const [newMessageText, setNewMessageText] = useState<string>('')
+  const [title, setTitle] = useState<string>(card.title);
+  const [description, setDescription] = useState<string>(card.description);
+  const [comment, setComment] = useState<string>('')
 
   const addComment = () => {
-    const newComment = { id: `${new Date().getTime()}`, cardId: card.id, text: newMessageText, author: "" }
-    handleAddComment(newComment);
-    setNewMessageText('');
+    handleAddComment(card.id, comment);
+    setComment('');
   }
 
   const saveChanges = () => {
-    if (!!updatedTitle) {
+    if (!!title) {
       setIsRedacted(false);
-      handleUpdateCard({ id: card.id, columnId: card.columnId, title: updatedTitle, description: updatedDescription });
+      handleUpdateCard({ id: card.id, columnId: card.columnId, title: title, description: description });
     }
   }
 
@@ -57,13 +56,13 @@ const ModalCardInfo: React.FC<Props> = ({
   const redactFields = <CardRedactWrapper>
     <CardInputWrapper>
       <Input
-        value={updatedTitle}
-        onChange={(e) => setUpdatedTitle(e.currentTarget.value)} />
+        value={title}
+        onChange={(e) => setTitle(e.currentTarget.value)} />
     </CardInputWrapper>
     <CardInputWrapper>
       <Input
-        value={updatedDescription}
-        onChange={(e) => setUpdatedDescription(e.currentTarget.value)} />
+        value={description}
+        onChange={(e) => setDescription(e.currentTarget.value)} />
     </CardInputWrapper>
   </CardRedactWrapper>
 
@@ -88,8 +87,8 @@ const ModalCardInfo: React.FC<Props> = ({
       <SendCommentWrapper>
         <CommentTextarea
           autoFocus
-          value={newMessageText}
-          onChange={(e) => setNewMessageText(e.currentTarget.value)}></CommentTextarea>
+          value={comment}
+          onChange={(e) => setComment(e.currentTarget.value)}></CommentTextarea>
         <Button
           style="padding: 10px 5px; margin-left: 5px;"
           onClick={addComment}

@@ -6,23 +6,23 @@ import { ModalCreateCard } from '../../Modals';
 import { Button, Input } from '..';
 
 
-interface Props {
+interface ColumnProps {
   column: ColumnType,
   cards: Array<CardType>,
   comments: Array<CommentsType>,
   userName: string,
   handleDeleteColumn: (id: string) => void,
-  handleUpdate: (id: string, newTitle: string, newDescription: string) => void,
+  handleUpdate: (column: ColumnType) => void,
   handleDeleteCard: (id: string) => void,
   handleAddCard: (newCard: CardType) => void,
   handleUpdateCard: (updatedCard: CardType) => void,
-  handleAddComment: (newComment: CommentsType) => void,
+  handleAddComment: (cardId: string, text: string) => void,
   handleDeleteComment: (id: string) => void,
   handleUpdateComment: (updatedComment: CommentsType) => void
 }
 
 
-const Column: React.FC<Props> = ({
+const Column: React.FC<ColumnProps> = ({
   column,
   cards,
   comments,
@@ -55,7 +55,8 @@ const Column: React.FC<Props> = ({
   const saveChanges = () => {
     if (!!updatedColumnTitle) {
       setRedactedMode(false);
-      handleUpdate(column.id, updatedColumnTitle, updatedColumnDescription);
+      let newColumn: ColumnType = { id: column.id, title: updatedColumnTitle, description: updatedColumnDescription }
+      handleUpdate(newColumn);
     }
   }
 
@@ -88,7 +89,7 @@ const Column: React.FC<Props> = ({
           {redactedMode ? columnDataRedact : columnDataShow}
           <ColumnButtonWrapper>
             <Button
-              style="margin-bottom: 6px;"
+              customStyles="margin-bottom: 6px;"
               onClick={updateAction}
               text={redactedMode ? "💾" : "✎"} />
             <Button onClick={() => handleDeleteColumn(column.id)}
@@ -112,7 +113,7 @@ const Column: React.FC<Props> = ({
           })
         }
         <Button
-          style="margin: 5px 5px;"
+          customStyles="margin: 5px 5px;"
           onClick={() => setCreateCardModal(true)}
           text="+ add card" />
         <ModalCreateCard

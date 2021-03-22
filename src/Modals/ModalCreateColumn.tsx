@@ -4,13 +4,13 @@ import { ColumnType } from '../App'
 import { Modal, Button, Input } from '../Components'
 import { ModalTitle } from './ModalsStyles';
 import { CreateColumnItemWrapper, CreateColumnWrapper } from './ModalsStyles'
-interface Props {
+interface ModalProps {
     isOpen: boolean,
     close: () => void,
     handleAddColumn: (column: ColumnType) => void
 }
 
-const ModalCreateColumn: React.FC<Props> = ({
+const ModalCreateColumn: React.FC<ModalProps> = ({
     isOpen,
     close,
     handleAddColumn }) => {

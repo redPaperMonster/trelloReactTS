@@ -5,19 +5,19 @@ import { CardWrapper, CardTitle, CardItem, CardButtonWpapper } from './cardsStyl
 import { ModalCardInfo } from '../../Modals';
 import { Button } from '..';
 
-interface Props {
+interface CardProps {
   card: CardType,
   comments: Array<CommentsType>,
   columnTitle: string,
   userName: string,
   handleDeleteCard: (id: string) => void,
   handleUpdateCard: (updatedCard: CardType) => void,
-  handleAddComment: (newComment: CommentsType) => void,
+  handleAddComment: (cardId: string, text: string) => void,
   handleDeleteComment: (id: string) => void,
   handleUpdateComment: (updatedComment: CommentsType) => void
 }
 
-const Card: React.FC<Props> = ({
+const Card: React.FC<CardProps> = ({
   card,
   comments,
   handleDeleteCard,

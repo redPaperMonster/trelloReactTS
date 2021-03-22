@@ -3,18 +3,20 @@ import React, { useState } from 'react'
 import { Button, Modal, FormInput } from '../Components';
 import { Form, Field } from 'react-final-form'
 
-interface Props {
+interface ModalProps {
     isOpen: boolean,
-    close: () => void,
     handleNameEnterSubmit: (name: string) => void
 }
 
-const ModalRegistration: React.FC<Props> = ({
+interface Values {
+    userName: string
+}
+
+const ModalRegistration: React.FC<ModalProps> = ({
     isOpen,
-    close,
     handleNameEnterSubmit }) => {
 
-    const handleSubmit = (values: any) => {
+    const handleSubmit = (values: Values) => {
         handleNameEnterSubmit(values.userName)
     }
     const required = (value: string) => (value ? undefined : 'Required')
@@ -23,7 +25,6 @@ const ModalRegistration: React.FC<Props> = ({
     return (
         <Modal
             isOpen={isOpen}
-            close={close}
             hideCloseButton>
             <Form
                 onSubmit={handleSubmit}>

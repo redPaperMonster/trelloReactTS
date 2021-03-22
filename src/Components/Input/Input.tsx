@@ -2,7 +2,7 @@
 import React, { ChangeEvent } from "react";
 import { CommonInput } from "./InputStyles";
 
-interface Props {
+interface InputProps {
     onChange?: (e: ChangeEvent<HTMLInputElement>) => void,
     value?: string,
     customSize?: number,
@@ -11,7 +11,7 @@ interface Props {
 
 
 
-const Input: React.FC<Props> = ({
+const Input: React.FC<InputProps> = ({
     onChange,
     value,
     customSize,

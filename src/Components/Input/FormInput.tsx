@@ -1,14 +1,17 @@
 
-import { FieldRenderProps } from "react-final-form";
+import { FieldInputProps, FieldMetaState, FieldRenderProps } from "react-final-form";
 import React from "react";
 import { CommonInput, ErrorLabel } from "./InputStyles";
 
-interface Props
-    extends FieldRenderProps<string> { }
+interface InputProps
+    extends FieldRenderProps<string> {
+    meta: FieldMetaState<string>,
+    input: FieldInputProps<string, HTMLElement>
+}
 
 
 
-const FormInput: React.FC<Props> = ({
+const FormInput: React.FC<InputProps> = ({
     meta,
     input }) => {
 
